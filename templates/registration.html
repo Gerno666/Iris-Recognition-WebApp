@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Iris Recognition</title>
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <link rel="stylesheet" type="text/css" href="../static/styles/style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Francois+One&family=Rampart+One&family=Bebas+Neue&display=swap" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <header class="header clearfix">
+      <a href="{{ url_for('access') }}" class="header__logo"><img src="../static/images/logo.png" height="50px" width="50px" alt="Logo"></a>
+      <ul class="header__menu animate">
+          <li class="header__menu__item"><a href="{{ url_for('access') }}" >Log in</a></li>
+          <li class="header__menu__item"><a href="{{ url_for('registration') }}" >Sign up</a></li>
+      </ul>
+    </header>
+
+    <section class="cover">
+      <div class="cover__caption">
+          <div class="cover__caption__copy">
+              <h1>Sign up</h1>
+              <h2>Enter your DATA and scan your IRIS</h2>
+          </div>
+      </div>
+    </section>
+
+    <section class="input-section">
+        <input type="text" class="input" id="nome" name="email" placeholder="Name" required>
+    </section>
+
+    <section class="input-section">
+        <input type="text" class="input" id="cognome" name="email" placeholder="Surname" required>
+    </section>
+
+    <section class="input-section">
+        <input type="email" class="input" id="email" name="email" placeholder="E-mail" required>
+    </section>
+
+    <section class="button-section">
+      <button id="loginButton" class="button"><h1>Log in</h1></button>
+    </section>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"> </script>
+
+    <script>
+        document.getElementById('loginButton').addEventListener('click', function() {
+
+          var emailInput = document.getElementById('email');
+          var nomeInput = document.getElementById('nome');
+          var cognomeInput = document.getElementById('cognome');
+
+          var emailValue = emailInput.value;
+          var nomeValue = nomeInput.value;
+          var cognomeValue = cognomeInput.value;
+
+          if (validateEmail(emailValue) && nomeValue.trim() !== '' && cognomeValue.trim() !== '') {
+              alert('Login successful!');
+          } else {
+              alert('Enter all fields correctly.');
+          }
+        });
+
+        function validateEmail(email) {
+          var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          return regex.test(email);
+        }
+    </script>
+
+  </body>
+
+</html>

@@ -1,0 +1,268 @@
+html, body {height: 100%; }
+ 
+body {
+	background: #fff;
+}
+
+ /*---------------------------------
+            GENERAL
+----------------------------------*/
+
+.animate {
+    -webkit-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+ }
+
+ .button {
+    display: inline-block;
+    background: #fff;
+    color: #000;
+    padding: 15px 30px;
+    border-radius: 3px;
+    text-decoration: none;
+ }
+
+ p {
+    line-height: 22px;
+ }
+
+ a {
+   color: #fff;
+ }
+
+ a:hover {
+   color: #fff;
+ }
+
+ h1 {
+	font-family: 'Rampart One', cursive;
+	font-size: 35px;
+	padding: 5%;
+	color: #000;
+ }
+
+ h2 {
+	font-family: 'Francois One', sans-serif;
+   	font-size: 25px;
+   	line-height: 30px;
+	color: #000;
+ }
+
+ h3 {
+	font-family: 'Bebas Neue', cursive;
+   	font-size: 25px;
+   	line-height: 30px;
+	color: #000;
+ }
+
+
+
+ /*---------------------------------
+            HEADER
+----------------------------------*/
+
+.header {
+    background: #000;
+	padding-bottom: 4px;
+ }
+
+ .header__logo {
+    color: #fff;
+    float: left;
+    display: block;
+    padding-top: 10px;
+    padding-left: 10px;
+ }
+
+ .header__menu {
+    float: right;
+    margin: 0;
+    padding: 0;
+    font-size: larger;
+ }
+
+ .header__menu__item {
+    display: inline-block;
+    text-align: end;
+ }
+
+ .header__menu__item a {
+    color: #fff;
+    display: block;
+    padding: 20px;
+    border-radius: 10px;
+    font-family: 'Francois One', sans-serif;
+ }
+
+ .header__menu__item a:hover {
+    background: #fff;
+    color: #000;
+ }
+
+ .header__icon-bar {
+    display: block;
+    float: right;
+    padding: 20px;
+    display: none;
+ }
+
+ .header__icon-bar span {
+    display: block;
+    height: 3px;
+    width: 30px;
+    background: #fff;
+    margin-bottom: 5px;
+ }
+
+  /*---------------------------------
+ 				COVER
+ ----------------------------------*/
+ 
+  .cover {
+	 height: 300px;
+	 width: 60%;
+	 position: relative;
+	 margin-left: 20%;
+	 margin-right: 15%;
+	 background-color: transparent;
+	 justify-content: center;
+	 align-items: center;
+    margin-bottom: -50px;
+  }
+ 
+  .cover__caption {
+	 display: table;
+	 height: 100%;
+	 width: 100%;
+	 position: relative;
+   }
+ 
+  .cover__caption__copy {
+	 vertical-align: middle;
+	 text-align: center;
+	 color: #fff;
+  }
+
+  /*---------------------------------
+            INPUT
+----------------------------------*/
+
+ .input-section {
+   height: auto;
+   width: 100%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   margin-bottom: 25px;
+ }
+
+ .input {
+   width: 25%;
+   z-index: 2;
+ }
+
+  /*---------------------------------
+            PHOTO
+----------------------------------*/
+
+ .question {
+   text-align: center;
+   margin-bottom: 10px;
+   margin-top: 40px;
+ }
+
+ .cameraSelection {
+   text-align: center;
+   margin-bottom: 20px;
+ }
+
+ .device-button-PC {
+   background-color: gray;
+   width: 200px;
+ }
+
+ .device-button-S {
+   width: 200px;
+ }
+
+ #video {
+   display: block;
+   width: 100%;
+   max-width: 400px;
+   margin: 20px auto;
+ }
+
+ #canvas {
+   display: none;
+ }
+
+ #captureButton {
+   display: block;
+   padding: 10px 15px;
+   font-size: 16px;
+   order: 2px solid #ccc;
+   cursor: pointer;
+   border-color: #000;
+   margin: 20px auto;
+ }
+
+ .button-retry {
+   display: none;
+   padding: 10px 15px;
+   font-size: 16px;
+   order: 2px solid #ccc;
+   cursor: pointer;
+   border-color: #000;
+   margin: 20px auto;
+ }
+
+ #photo {
+   display: none;
+   width: 100%;
+   max-width: 400px;
+   margin: 0 auto;
+ }
+
+  /*---------------------------------
+            BUTTON
+----------------------------------*/
+
+ .button-section {
+   text-align: center;
+   margin-top: 50px;
+ }
+ .button {
+   width: 200px;
+   height: 70px;
+   border: 2px solid #ccc;
+   padding-bottom: 100px;
+   padding-top: 0px;
+ }
+
+ .button:hover {
+   border-color: #000;
+   cursor: pointer;
+}
+
+  /*---------------------------------
+            FUNZIONI
+----------------------------------*/
+
+ .clearfix:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: "";
+    clear: both;
+    height: 0;
+ }
+ * html.clearfix                {zoom: 1;} /* IE6 */
+ *:first-child+html .clearfix   {zoom: 1;} /* IE7 */
+
+ *,
+ *:before,
+ *:after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+ }
