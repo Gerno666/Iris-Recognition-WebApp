@@ -33,46 +33,138 @@
     </section>
 
     <section class="input-section">
-        <input type="text" class="input" id="nome" name="email" placeholder="Name" required>
+        <input type="text" class="input" id="name" name="email" placeholder="Name" required>
     </section>
 
     <section class="input-section">
-        <input type="text" class="input" id="cognome" name="email" placeholder="Surname" required>
+        <input type="text" class="input" id="surname" name="email" placeholder="Surname" required>
     </section>
 
     <section class="input-section">
         <input type="email" class="input" id="email" name="email" placeholder="E-mail" required>
     </section>
 
+    <video id="video" autoplay></video>
+    <button id="captureButton"><h2>Capture Photo</h2></button>
+    <canvas id="canvas"></canvas>
+    <img id="photo" alt="Captured Photo">
+    <button id="retryButton" class="button-retry"><h2>Retry Photo</h2></button>
+
     <section class="button-section">
-      <button id="loginButton" class="button"><h1>Log in</h1></button>
+      <button id="signupButton" class="button"><h1>Sign Up</h1></button>
     </section>
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"> </script>
 
     <script>
-        document.getElementById('loginButton').addEventListener('click', function() {
-
+      document.getElementById('signupButton').addEventListener('click', function() {
           var emailInput = document.getElementById('email');
-          var nomeInput = document.getElementById('nome');
-          var cognomeInput = document.getElementById('cognome');
+          var nameInput = document.getElementById('name');
+          var surnameInput = document.getElementById('surname');
 
           var emailValue = emailInput.value;
-          var nomeValue = nomeInput.value;
-          var cognomeValue = cognomeInput.value;
+          var nameValue = nameInput.value;
+          var surnameValue = surnameInput.value;
 
-          if (validateEmail(emailValue) && nomeValue.trim() !== '' && cognomeValue.trim() !== '') {
-              alert('Login successful!');
-          } else {
-              alert('Enter all fields correctly.');
-          }
-        });
+          var photo = document.getElementById('photo');
+          getBlobFromImage(photo).then(function(blob) {
+            if (validateEmail(emailValue) && nameValue.trim() !== '' && surnameValue.trim() !== '') {
+                var formData = new FormData();
+                formData.append('email', emailValue);
+                formData.append('name', nameValue);
+                formData.append('surname', surnameValue);
+                formData.append('iris_picture', blob, 'iris_picture.png');
 
-        function validateEmail(email) {
+                $.ajax({
+                    url: '/signup',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        alert(response);
+                    },
+                    error: function(error) {
+                        alert('Error during registration.');
+                    }
+                });
+            } else {
+                alert('Enter all fields correctly.');
+            }
+          });
+      });
+
+      function validateEmail(email) {
           var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           return regex.test(email);
-        }
+      }
+
+      function getBlobFromImage(img) {
+        return new Promise((resolve) => {
+            var canvas = document.createElement("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
+
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, img.width, img.height);
+
+            canvas.toBlob(resolve, 'image/png');
+        });
+    }
+
+    </script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const video = document.getElementById('video');
+        const captureButton = document.getElementById('captureButton');
+        const canvas = document.getElementById('canvas');
+        const photo = document.getElementById('photo');
+        const ctx = canvas.getContext('2d');
+
+        navigator.mediaDevices.getUserMedia({ video: true })
+          .then(function (stream) {
+            if (stream) {
+              video.srcObject = stream;
+            } else {
+              console.error('No camera available.');
+            }
+          })
+          .catch(function (error) {
+            console.error('Error accessing webcam:', error);
+          });
+
+          captureButton.addEventListener('click', function () {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight*(5/8);
+
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            const imageDataURL = canvas.toDataURL('image/png');
+
+            photo.src = imageDataURL;
+            photo.width = canvas.width;
+            photo.height = canvas.height;
+
+            video.style.display = 'none';
+            captureButton.style.display = 'none';
+
+            canvas.style.display = 'none';
+            photo.style.display = 'block';
+            retryButton.style.display = 'block';
+          });
+
+          retryButton.addEventListener('click', function () {
+            video.style.display = 'block';
+            captureButton.style.display = 'block';
+
+            canvas.style.display = 'none';
+            photo.style.display = 'none';
+            retryButton.style.display = 'none';
+          });
+
+      });
     </script>
 
   </body>
