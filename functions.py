@@ -34,7 +34,7 @@ def delete_row_by_email(email_to_delete):
         conn.close()
 
 
-def save_image_to_png(desired_email):
+def save_image(desired_email):
     # Connect to the database
     conn = sqlite3.connect('instance/site.db')
     cursor = conn.cursor()
@@ -55,8 +55,8 @@ def save_image_to_png(desired_email):
             iris_picture = Image.open(BytesIO(iris_picture_blob))
 
             # Save the image in PNG format with a filename based on the id
-            file_name = f'data/iris_image_{desired_email}.png'
-            iris_picture.save(file_name, 'PNG')
+            file_name = f'data/iris_image_{desired_email}.bmp'
+            iris_picture.save(file_name, 'BMP')
 
             print(f"Image saved successfully as {file_name}")
         else:

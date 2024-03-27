@@ -3,6 +3,8 @@ import config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy.exc import IntegrityError
+from ML_test import ML_Match
+
 
 app = Flask(__name__)
 
@@ -62,6 +64,20 @@ def signup():
 
 
 ##################################################################################################################
+    
+
+@app.route('/login', methods=['POST'])
+def login():
+    email = request.form.get('email')
+    user = User.query.filter_by(email=email).first()
+    if user:
+        return 'success'  # L'utente è stato trovato nel database
+    else:
+        return 'error'    # L'utente non è stato trovato nel database
+    
+
+##################################################################################################################
+    
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=config.PORT, debug=config.DEBUG_MODE)

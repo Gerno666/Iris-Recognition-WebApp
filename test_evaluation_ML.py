@@ -30,11 +30,11 @@ false_negatives = 0
 for person_folder in sorted(os.listdir(dataset_folder)):
     person_folder_path = os.path.join(dataset_folder, person_folder)
 
-    if (person_folder == '051'):
-        CRRT, CRRF, FMR, FNMR = calculate_evaluation_metrics(correct_recognition_true, correct_recognition_false, false_positives, false_negatives, total_samples)
-        print(CRRT, FNMR, CRRF, FMR, total_samples)
-        exit()
-    print(person_folder)
+    #if (person_folder == '051'):
+        #CRRT, CRRF, FMR, FNMR = calculate_evaluation_metrics(correct_recognition_true, correct_recognition_false, false_positives, false_negatives, total_samples)
+        #print(CRRT, FNMR, CRRF, FMR, total_samples)
+        #exit()
+    #print(person_folder)
     
     # Iterazione attraverso le sottocartelle '1' e '2'
     for eye_folder in ['1', '2']:
@@ -92,3 +92,4 @@ print(CRRT, FNMR, CRRF, FMR, total_samples)
 
 # 0.6402116402116402 0.35978835978835977 0.9643298648639103 0.03567013513608974 571536 (14.5)
 # 0.6693121693121693 0.3306878306878307 0.9554891530859488 0.04451084691405119 571536 (14.8)
+# 0.7004081632653061 0.29959183673469386 0.9466374213236697 0.05336257867633035 264600 (14.8)
