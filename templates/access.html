@@ -64,28 +64,42 @@
           alert('Upload or take a photo');
           return;
         }
-
-        if (validateEmail(emailValue)) {
-            // Invia l'email al server per la verifica
-            $.ajax({
-                url: '/login',
-                type: 'POST',
-                data: { email: emailValue },
-                success: function(response) {
-                    if (response === "success") {
-                        alert('Login successful!');
-                    } else {
-                        alert('Email not found. Please sign up.');
-                    }
-                },
-                error: function(error) {
-                    alert('Error during login.');
-                }
-            });
-        } else {
-            alert('Enter a valid email address.');
-        }
+        getBlobFromImage(photo).then(function(blob) {
+          if (validateEmail(emailValue)) {
+              var formData = new FormData();
+              formData.append('email', emailValue);
+              formData.append('iris_picture', blob, 'iris_picture.png');
+              $.ajax({
+                  url: '/login',
+                  type: 'POST',
+                  data: formData,
+                  processData: false,
+                  contentType: false,
+                  success: function(response) {
+                      alert(response)
+                  },
+                  error: function(error) {
+                      alert('Error during login.');
+                  }
+              });
+          } else {
+              alert('Enter a valid email address.');
+          }
+        });
     });
+
+    function getBlobFromImage(img) {
+      return new Promise((resolve) => {
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, img.width, img.height);
+
+        canvas.toBlob(resolve, 'image/png');
+      });
+  }
 
     function validateEmail(email) {
         var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -104,9 +118,9 @@
         const canvas = document.getElementById('canvas');
         canvas.style.display = "none";
         var context = canvas.getContext('2d');
-        context.clearRect(0, 0, canvas.width, canvas.height); // Pulisce il contenuto del canvas
-        canvas.width = 0; // Imposta la larghezza del canvas a 0
-        canvas.height = 0; // Imposta l'altezza del canvas a 0
+        context.clearRect(0, 0, canvas.width, canvas.height); 
+        canvas.width = 0; 
+        canvas.height = 0; 
         const photo = document.getElementById('photo');
         photo.style.display = 'none';
         const video = document.getElementById('video');
@@ -116,17 +130,13 @@
         const retryButton = document.getElementById('retryButton');
         retryButton.style.display = 'none';
 
-        // Crea un elemento input di tipo file
         var fileInput = document.createElement('input');
         fileInput.type = 'file';
 
-        // Aggiungi un gestore di eventi per il cambiamento del file
         fileInput.addEventListener('change', function(event) {
             var file = event.target.files[0];
             if (file) {
-              // Verifica se il tipo MIME del file è un'immagine
               if (file.type.startsWith('image/')) {
-                  // Il file è un'immagine
                   var photo = document.getElementById('photo');
                   photo.style.display = 'block';
                   photo.src = URL.createObjectURL(file);
@@ -135,15 +145,11 @@
                   retryButton2.style.display = 'block';
 
               } else {
-                  // Il file non è un'immagine
-                  alert('Si prega di selezionare un file immagine.');
-                  // Resetta l'input del file per consentire al'utente di selezionare nuovamente un file
+                  alert('Please select an image file.');
                   fileInput.value = '';
               }
           }
         });
-
-        // Simula il clic sull'elemento input per aprire la finestra di dialogo del file
         fileInput.click();
       });
 
@@ -157,9 +163,9 @@
         const canvas = document.getElementById('canvas');
         canvas.style.display = "block";
         var context = canvas.getContext('2d');
-        context.clearRect(0, 0, canvas.width, canvas.height); // Pulisce il contenuto del canvas
-        canvas.width = 0; // Imposta la larghezza del canvas a 0
-        canvas.height = 0; // Imposta l'altezza del canvas a 0
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        canvas.width = 0;
+        canvas.height = 0;
         const photo = document.getElementById('photo');
         photo.style.display = 'none';
         const video = document.getElementById('video');

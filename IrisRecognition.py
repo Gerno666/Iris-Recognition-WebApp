@@ -22,12 +22,12 @@ warnings.filterwarnings("ignore")
 
 '''TRAINING'''
 
-#reading the training images from the CASIA dataset
+# reading the training images from the CASIA dataset
 images_train = [cv2.imread(file) for file in sorted(glob.glob('data/CASIA Iris Image Database (version 1.0)/*/1/*.bmp'))]
 num_data_train = len(images_train)
 print("Numero di dati di training:", num_data_train)
 
-#running Localization, Normalization,Enhancement and Feature Extraction on all the training images
+# running Localization, Normalization,Enhancement and Feature Extraction on all the training images
 boundary_train,centers_train=IrisLocalization(images_train)
 normalized_train=IrisNormalization(boundary_train,centers_train)
 enhanced_train=ImageEnhancement(normalized_train)
@@ -38,12 +38,12 @@ print("Training data processed.")
 
 '''TESTING'''
 
-#reading the testing images from the CASIA dataset
+# reading the testing images from the CASIA dataset
 images_test = [cv2.imread(file) for file in sorted(glob.glob('data/CASIA Iris Image Database (version 1.0)/*/2/*.bmp'))]
 num_data_test = len(images_test)
 print("Numero di dati di testing:", num_data_test)
 
-#running Localization, Normalization,Enhancement and Feature Extraction on all the testing images
+# running Localization, Normalization,Enhancement and Feature Extraction on all the testing images
 boundary_test,centers_test=IrisLocalization(images_test)
 normalized_test=IrisNormalization(boundary_test,centers_test)
 enhanced_test=ImageEnhancement(normalized_test)
@@ -59,20 +59,20 @@ y_pred=[]
 match_cosine=[]
 match_cosine_ROC=[]
 
-#Performing Matching and CRR scores for 10,40,60,80,90,107 number of dimensions in the reduced feature vector
+# Performing Matching and CRR scores for 10,40,60,80,90,107 number of dimensions in the reduced feature vector
 components=[10, 40, 60, 80, 90, 107]
 
 print("Begin Matching test data with the train data")
 for comp in components:
     print(comp)
     
-    #Running matching for all the dimensions specified in "components" 
+    # Running matching for all the dimensions specified in "components" 
     comp_match_L1,comp_match_L2,comp_match_cosine,comp_match_cosine_ROC=IrisMatching(feature_vector_train,feature_vector_test,comp,0)
     
-    #Calculating CRR for all the dimensions specified in "components" 
+    # Calculating CRR for all the dimensions specified in "components" 
     comp_crr_L1,comp_crr_L2,comp_crr_cosine=PerformanceEvaluation(comp_match_L1,comp_match_L2,comp_match_cosine)
     
-    #combining the results of all the dimensional feature vector into one array
+    # combining the results of all the dimensional feature vector into one array
     crr_L1.append(comp_crr_L1)
     crr_L2.append(comp_crr_L2)
     crr_cosine.append(comp_crr_cosine)
@@ -80,13 +80,13 @@ for comp in components:
     match_cosine_ROC.append(comp_match_cosine_ROC)
 
 
-#Performing Matching and calculating CRR score for the original feature vector (without dimensionality reduction)
+# Performing Matching and calculating CRR score for the original feature vector (without dimensionality reduction)
 orig_match_L1,orig_match_L2,orig_match_cosine,orig_match_cosine_ROC=IrisMatching(feature_vector_train,feature_vector_test,0,1)
 orig_crr_L1,orig_crr_L2,orig_crr_cosine=PerformanceEvaluation(orig_match_L1,orig_match_L2,orig_match_cosine)  
 print("Completed Matching")
 
 
-#Table for CRR rates for the original and reduced feature set(components=107)
+# Table for CRR rates for the original and reduced feature set(components=107)
 print('\n\n\n')
 dict={'Similarity Measure':['L1','L2','Cosine Distance'],'CRR for Original Feature Set':[orig_crr_L1,orig_crr_L2,orig_crr_cosine],'CRR for Reduced Feature Set (107)':[crr_L1[5],crr_L2[5],crr_cosine[5]]}
 table=pd.DataFrame(dict)
@@ -106,8 +106,8 @@ plt.show()
 
 
 
-#Calculating the false positive and the true positive rates for the data
-#We have taken match_cosine[5] because the 5th instance of the array is for the 107 reduced feature dimension
+# Calculating the false positive and the true positive rates for the data
+# We have taken match_cosine[5] because the 5th instance of the array is for the 107 reduced feature dimension
 fmr_all=[]
 fnmr_all=[]
 
@@ -137,7 +137,7 @@ print(roc_table.iloc[1],"\n")
 print(roc_table.iloc[2])
 
 
-#Plotting the ROC Curve
+# Plotting the ROC Curve
 plt.plot(fnmr_all,fmr_all)
 plt.title('ROC Curve')
 plt.ylabel('False Non-Match Rate')

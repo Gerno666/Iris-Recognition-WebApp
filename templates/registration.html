@@ -122,7 +122,7 @@
 
             canvas.toBlob(resolve, 'image/png');
         });
-    }
+      }
 
     </script>
 
@@ -137,9 +137,9 @@
         const canvas = document.getElementById('canvas');
         canvas.style.display = "none";
         var context = canvas.getContext('2d');
-        context.clearRect(0, 0, canvas.width, canvas.height); // Pulisce il contenuto del canvas
-        canvas.width = 0; // Imposta la larghezza del canvas a 0
-        canvas.height = 0; // Imposta l'altezza del canvas a 0
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        canvas.width = 0;
+        canvas.height = 0;
         const photo = document.getElementById('photo');
         photo.style.display = 'none';
         const video = document.getElementById('video');
@@ -149,17 +149,13 @@
         const retryButton = document.getElementById('retryButton');
         retryButton.style.display = 'none';
 
-        // Crea un elemento input di tipo file
         var fileInput = document.createElement('input');
         fileInput.type = 'file';
 
-        // Aggiungi un gestore di eventi per il cambiamento del file
         fileInput.addEventListener('change', function(event) {
             var file = event.target.files[0];
             if (file) {
-              // Verifica se il tipo MIME del file è un'immagine
               if (file.type.startsWith('image/')) {
-                  // Il file è un'immagine
                   var photo = document.getElementById('photo');
                   photo.style.display = 'block';
                   photo.src = URL.createObjectURL(file);
@@ -168,9 +164,7 @@
                   retryButton2.style.display = 'block';
 
               } else {
-                  // Il file non è un'immagine
-                  alert('Si prega di selezionare un file immagine.');
-                  // Resetta l'input del file per consentire al'utente di selezionare nuovamente un file
+                  alert('Please select an image file.');
                   fileInput.value = '';
               }
           }

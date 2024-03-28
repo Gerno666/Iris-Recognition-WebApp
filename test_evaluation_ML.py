@@ -2,31 +2,31 @@ import os
 from ML_test import ML_Match
 
 def calculate_evaluation_metrics(correct_recognition_true, correct_recognition_false, false_positives, false_negatives, total_samples):
-    # Calcolo del tasso di riconoscimento corretto (CRRT)
+    # Calculation of the correct recognition rate (CRRT)
     CRRT = correct_recognition_true / (total_samples/108)
 
-    # Calcolo del tasso di falsi negativi (FNMR)
+    # Calculation of the false negative rate (FNMR)
     FNMR = false_negatives / (total_samples/(108))
 
-    # Calcolo del tasso di riconoscimento corretto (CRRF)
+    # Calculation of the correct recognition rate (CRRF)
     CRRF = correct_recognition_false / (total_samples - (total_samples/(108)))
 
-    # Calcolo del tasso di falsi positivi (FMR)
+    # Calculation of the false positive rate (FMR)
     FMR = false_positives / (total_samples - (total_samples/(108)))
 
     return CRRT, CRRF, FMR, FNMR
 
-# Percorso della cartella contenente il dataset
+# Path to the folder containing the dataset
 dataset_folder = 'data/CASIA Iris Image Database (version 1.0)'
 
-# Inizializzazione dei contatori per il calcolo dei parametri di valutazione
+# Initialization of counters for calculating evaluation parameters
 total_samples = 0
 correct_recognition_false = 0
 correct_recognition_true = 0
 false_positives = 0
 false_negatives = 0
 
-# Iterazione attraverso tutte le sottocartelle numerate da 001 a 118
+# Iterate through all subfolders numbered 001 through 118
 for person_folder in sorted(os.listdir(dataset_folder)):
     person_folder_path = os.path.join(dataset_folder, person_folder)
 
@@ -36,14 +36,14 @@ for person_folder in sorted(os.listdir(dataset_folder)):
         #exit()
     #print(person_folder)
     
-    # Iterazione attraverso le sottocartelle '1' e '2'
+    # Iterating through subfolders '1' and '2'
     for eye_folder in ['1', '2']:
         eye_folder_path = os.path.join(person_folder_path, eye_folder)
 
-        # Assicurati che la sottocartella contenga le immagini
+        # Make sure the subfolder contains images
         if os.path.isdir(eye_folder_path):
 
-            # Ottieni il percorso completo di tutte le immagini nella sottocartella
+            # Get the full path to all images in the subfolder
             image_files = [os.path.join(eye_folder_path, file) for file in os.listdir(eye_folder_path) if file.endswith('.bmp')]
 
             for reference_image_file in image_files:
@@ -54,14 +54,14 @@ for person_folder in sorted(os.listdir(dataset_folder)):
                     for person_folder_2 in sorted(os.listdir(dataset_folder)):
                         person_folder_path_2 = os.path.join(dataset_folder, person_folder_2)
                         
-                        # Iterazione attraverso le sottocartelle '1' e '2'
+                        # Iterating through subfolders '1' and '2'
                         for eye_folder_2 in ['1', '2']:
                             eye_folder_path_2 = os.path.join(person_folder_path_2, eye_folder_2)
 
-                            # Assicurati che la sottocartella contenga le immagini
+                            # Make sure the subfolder contains images
                             if os.path.isdir(eye_folder_path_2):
 
-                                # Ottieni il percorso completo di tutte le immagini nella sottocartella
+                                # Get the full path to all images in the subfolder
                                 image_files_2 = [os.path.join(eye_folder_path_2, file_2) for file_2 in os.listdir(eye_folder_path_2) if file_2.endswith('.bmp')]
 
                                 for reference_image_file_2 in image_files_2:
@@ -81,7 +81,7 @@ for person_folder in sorted(os.listdir(dataset_folder)):
                                             correct_recognition_false += 1
 
 
-# Calcola i parametri di valutazione
+# Calculate the evaluation parameters
 CRRT, CRRF, FMR, FNMR = calculate_evaluation_metrics(correct_recognition_true, correct_recognition_false, false_positives, false_negatives, total_samples)
 print(CRRT, FNMR, CRRF, FMR, total_samples)
 
@@ -91,5 +91,4 @@ print(CRRT, FNMR, CRRF, FMR, total_samples)
 # 0.7551020408163265 0.24489795918367346 0.9412550066755674 0.05874499332443257 10584 (14.5)
 
 # 0.6402116402116402 0.35978835978835977 0.9643298648639103 0.03567013513608974 571536 (14.5)
-# 0.6693121693121693 0.3306878306878307 0.9554891530859488 0.04451084691405119 571536 (14.8)
-# 0.7004081632653061 0.29959183673469386 0.9466374213236697 0.05336257867633035 264600 (14.8)
+# 0.7004081632653061 0.29959183673469386 0.9466374213236697 0.05336257867633035 571536 (14.8)

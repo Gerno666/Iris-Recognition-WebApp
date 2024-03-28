@@ -7,16 +7,16 @@ from IrisNormalization import IrisNormalization
 from ImageEnhancement import ImageEnhancement
 from FeatureExtraction import FeatureExtraction
 
-# Percorso del modello addestrato
+# Path of the trained model
 model_path = 'modello_LDA.pkl'
-# Caricare il modello addestrato
+# Load the trained model
 sklearn_lda = joblib.load(model_path)
 
 
 def extract_features(image):
     image = cv2.imread(image)
     image = [image]
-    # Estrarre le feature vettoriali dall'immagine (sostituire con il codice appropriato)
+    # Extract vector features from the image
     boundary,centers=IrisLocalization(image)
     normalized=IrisNormalization(boundary,centers)
     enhanced=ImageEnhancement(normalized)
@@ -24,7 +24,6 @@ def extract_features(image):
     return feature_vector
 
 def perform_matching(feature_vector1, feature_vector2):
-    # Assicurati che feature_vector1 e feature_vector2 siano array numpy prima di chiamare reshape
     feature_vector1_np = np.array(feature_vector1)
     feature_vector2_np = np.array(feature_vector2)
 
@@ -34,17 +33,17 @@ def perform_matching(feature_vector1, feature_vector2):
     if feature_vector2_np.shape[0] != 1:
         feature_vector2_np = feature_vector2_np.reshape(1, -1)
 
-    # Trasforma i feature vectors utilizzando il modello LDA addestrato
+    # Transform feature vectors using the trained LDA model
     feature1_transformed = sklearn_lda.transform(feature_vector1_np)
     feature2_transformed = sklearn_lda.transform(feature_vector2_np)
     
-    # Calcolare la distanza tra le feature trasformate (ad esempio, distanza euclidea)
+    # Calculate the Euclidean distance between the transformed features
     distance = np.linalg.norm(feature1_transformed - feature2_transformed)
     
-    # Definire una soglia per determinare se le due immagini corrispondono o meno
-    threshold = 14.8 # Definire una soglia appropriata
+    # Define a threshold to determine whether the two images match or not
+    threshold = 14.8 
     
-    # Determinare se le due immagini corrispondono utilizzando la distanza e la soglia
+    # Determine if the two images match using distance and threshold
     if distance <= threshold:
         match = True
     else:
@@ -53,14 +52,13 @@ def perform_matching(feature_vector1, feature_vector2):
     return match
 
 def ML_Match(path1, path2):
-    # Estrarre le feature vettoriali dalle immagini
+    # Extract vector features from images
     feature_vector1 = extract_features(path1)
     feature_vector2 = extract_features(path2)
 
-    # Eseguire il match tra le due immagini utilizzando le feature vettoriali e il modello addestrato
+    # Match the two images using vector features and the trained model
     match = perform_matching(feature_vector1, feature_vector2)
 
-    # Stampare il risultato del match
     if match:
         return True
     else:
