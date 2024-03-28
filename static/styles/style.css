@@ -161,6 +161,28 @@ body {
    z-index: 2;
  }
 
+ .CT-photo-button {
+  display: flex;
+   height: auto;
+   width: 100%;
+   align-items: center;
+   justify-content: center;
+   margin-bottom: 25px;
+ }
+
+ .CT-button {
+  height: 80px;
+  width: auto;
+  margin: 10px;
+ }
+
+ #takePhotoButton {
+  background-color: #999999;
+ }
+
+ #takePhotoButton:hover, #uploadPhotoButton:hover {
+  background-color: grey;
+ }
   /*---------------------------------
             PHOTO
 ----------------------------------*/
@@ -206,6 +228,10 @@ body {
    margin: 20px auto;
  }
 
+ #captureButton:hover {
+  background-color: lightgrey;
+ }
+
  .button-retry {
    display: none;
    padding: 10px 15px;
@@ -232,7 +258,7 @@ body {
    margin-top: 50px;
  }
  .button {
-   width: 200px;
+   width: 220px;
    height: 70px;
    border: 2px solid #ccc;
    padding-bottom: 100px;
@@ -245,7 +271,7 @@ body {
 }
 
   /*---------------------------------
-            FUNZIONI
+            FUNCTIONS
 ----------------------------------*/
 
  .clearfix:after {

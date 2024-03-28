@@ -36,12 +36,17 @@
         <input type="email" class="input" id="email" name="email" placeholder="email" required>
     </section>
 
+    <section class="CT-photo-button">
+      <button id="uploadPhotoButton" class="CT-button"><h3>Upload a Photo</h3></button>
+      <button id="takePhotoButton" class="CT-button"><h3>Take a Photo</h3></button>
+    </section>
+
     <video id="video" autoplay></video>
     <button id="captureButton"><h2>Capture Photo</h2></button>
     <canvas id="canvas"></canvas>
-    <img id="photo" alt="Captured Photo">
+    <img id="photo" alt="Captured Photo" src="" style="display: none;">
     <button id="retryButton" class="button-retry"><h2>Retry Photo</h2></button>
-
+    <button id="retryButton2" class="button-retry"><h2>Delete Photo</h2></button>
     <section class="button-section">
        <button id="loginButton" class="button"><h1>Log in</h1></button>
     </section>
@@ -51,27 +56,135 @@
 
     <script>
         document.getElementById('loginButton').addEventListener('click', function() {
+        var emailInput = document.getElementById('email');
+        var emailValue = emailInput.value;
 
-          var emailInput = document.getElementById('email');
-          var emailValue = emailInput.value;
-
+        var photo = document.getElementById('photo');
+        if (photo.style.display == 'none') {
+          alert('Upload or take a photo');
+          return;
+        }
+        getBlobFromImage(photo).then(function(blob) {
           if (validateEmail(emailValue)) {
-              alert('Login successful!');
+              var formData = new FormData();
+              formData.append('email', emailValue);
+              formData.append('iris_picture', blob, 'iris_picture.png');
+              $.ajax({
+                  url: '/login',
+                  type: 'POST',
+                  data: formData,
+                  processData: false,
+                  contentType: false,
+                  success: function(response) {
+                      alert(response)
+                  },
+                  error: function(error) {
+                      alert('Error during login.');
+                  }
+              });
           } else {
               alert('Enter a valid email address.');
           }
         });
+    });
 
-        function validateEmail(email) {
-          var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          return regex.test(email);
-        }
+    function getBlobFromImage(img) {
+      return new Promise((resolve) => {
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, img.width, img.height);
+
+        canvas.toBlob(resolve, 'image/png');
+      });
+  }
+
+    function validateEmail(email) {
+        var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    }
+    </script>
+
+    <script>
+      document.getElementById('uploadPhotoButton').addEventListener('click', function() {
+        var takePB = document.getElementById('takePhotoButton');
+        var uploadPB = document.getElementById('uploadPhotoButton');
+
+        uploadPB.style.backgroundColor = "#999999";
+        takePB.style.backgroundColor = "lightgrey";
+
+        const canvas = document.getElementById('canvas');
+        canvas.style.display = "none";
+        var context = canvas.getContext('2d');
+        context.clearRect(0, 0, canvas.width, canvas.height); 
+        canvas.width = 0; 
+        canvas.height = 0; 
+        const photo = document.getElementById('photo');
+        photo.style.display = 'none';
+        const video = document.getElementById('video');
+        video.style.display = 'none';
+        const captureButton = document.getElementById('captureButton');
+        captureButton.style.display = 'none';
+        const retryButton = document.getElementById('retryButton');
+        retryButton.style.display = 'none';
+
+        var fileInput = document.createElement('input');
+        fileInput.type = 'file';
+
+        fileInput.addEventListener('change', function(event) {
+            var file = event.target.files[0];
+            if (file) {
+              if (file.type.startsWith('image/')) {
+                  var photo = document.getElementById('photo');
+                  photo.style.display = 'block';
+                  photo.src = URL.createObjectURL(file);
+
+                  const retryButton2 = document.getElementById('retryButton2');
+                  retryButton2.style.display = 'block';
+
+              } else {
+                  alert('Please select an image file.');
+                  fileInput.value = '';
+              }
+          }
+        });
+        fileInput.click();
+      });
+
+      document.getElementById('takePhotoButton').addEventListener('click', function() {
+        var takePB = document.getElementById('takePhotoButton');
+        var uploadPB = document.getElementById('uploadPhotoButton');
+
+        takePB.style.backgroundColor = "#999999";
+        uploadPB.style.backgroundColor = "lightgrey";
+
+        const canvas = document.getElementById('canvas');
+        canvas.style.display = "block";
+        var context = canvas.getContext('2d');
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        canvas.width = 0;
+        canvas.height = 0;
+        const photo = document.getElementById('photo');
+        photo.style.display = 'none';
+        const video = document.getElementById('video');
+        video.style.display = 'block';
+        const retryButton = document.getElementById('retryButton');
+        retryButton.style.display = 'none';
+        const retryButton2 = document.getElementById('retryButton2');
+        retryButton2.style.display = 'none';
+        const captureButton = document.getElementById('captureButton');
+        captureButton.style.display = 'block';
+      });
     </script>
 
     <script>
       document.addEventListener('DOMContentLoaded', function () {
         const video = document.getElementById('video');
         const captureButton = document.getElementById('captureButton');
+        const retryButton = document.getElementById('retryButton');
+        const retryButton2 = document.getElementById('retryButton2');
         const canvas = document.getElementById('canvas');
         const photo = document.getElementById('photo');
         const ctx = canvas.getContext('2d');
@@ -114,7 +227,14 @@
 
             canvas.style.display = 'none';
             photo.style.display = 'none';
+            photo.src = "";
             retryButton.style.display = 'none';
+          });
+
+          retryButton2.addEventListener('click', function () {
+            photo.style.display = 'none';
+            photo.src = "";
+            retryButton2.style.display = 'none';
           });
 
       });
