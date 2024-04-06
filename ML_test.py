@@ -41,7 +41,7 @@ def perform_matching(feature_vector1, feature_vector2):
     distance = np.linalg.norm(feature1_transformed - feature2_transformed)
     
     # Define a threshold to determine whether the two images match or not
-    threshold = 14.8 
+    threshold = 15
     
     # Determine if the two images match using distance and threshold
     if distance <= threshold:
