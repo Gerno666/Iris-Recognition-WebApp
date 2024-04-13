@@ -140,7 +140,7 @@ print(roc_table.iloc[2])
 # Plotting the ROC Curve
 plt.plot(fnmr_all,fmr_all)
 plt.title('ROC Curve')
-plt.ylabel('False Non-Match Rate')
-plt.xlabel('False Match Rate')
+plt.ylabel('False Match Rate')
+plt.xlabel('False Non-Match Rate')
 plt.show()
 
