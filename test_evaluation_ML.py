@@ -30,11 +30,11 @@ false_negatives = 0
 for person_folder in sorted(os.listdir(dataset_folder)):
     person_folder_path = os.path.join(dataset_folder, person_folder)
 
-    if (person_folder == '051'):
-        CRRT, CRRF, FMR, FNMR = calculate_evaluation_metrics(correct_recognition_true, correct_recognition_false, false_positives, false_negatives, total_samples)
-        print(CRRT, FNMR, CRRF, FMR, total_samples)
-        exit()
-    print(person_folder)
+    #if (person_folder == '051'):
+        #CRRT, CRRF, FMR, FNMR = calculate_evaluation_metrics(correct_recognition_true, correct_recognition_false, false_positives, false_negatives, total_samples)
+        #print(CRRT, FNMR, CRRF, FMR, total_samples)
+        #exit()
+    #print(person_folder)
     
     # Iterating through subfolders '1' and '2'
     for eye_folder in ['1', '2']:
@@ -91,5 +91,4 @@ print(CRRT, FNMR, CRRF, FMR, total_samples)
 # 0.7551020408163265 0.24489795918367346 0.9412550066755674 0.05874499332443257 10584 (14.5)
 
 # 0.6402116402116402 0.35978835978835977 0.9643298648639103 0.03567013513608974 571536 (14.5)
-# 0.7004081632653061 0.29959183673469386 0.9486374213236697 0.05136257867633035 571536 (14.8)
-# 0.7430612244897959 0.25693877551020406 0.9449380125882129 0.05506198741178715 571536 (15)
+# 0.7004081632653061 0.29959183673469386 0.9466374213236697 0.05336257867633035 571536 (14.8)

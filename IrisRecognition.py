@@ -11,12 +11,13 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
 import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn import metrics
-from IrisLocalization import IrisLocalization
-from IrisNormalization import IrisNormalization
-from ImageEnhancement import ImageEnhancement
-from FeatureExtraction import FeatureExtraction
-from IrisMatching import IrisMatching
-from PerformanceEvaluation import PerformanceEvaluation
+from Iris_Localization import IrisLocalization
+from Eyelid_Detection import EyelidDetection
+from Iris_Normalization import normalize_iris
+from Image_Enhancement import ImageEnhancement
+from Feature_Extraction import FeatureExtraction
+from Iris_Matching import IrisMatching
+from Performance_Evaluation import PerformanceEvaluation
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -28,12 +29,12 @@ num_data_train = len(images_train)
 print("Numero di dati di training:", num_data_train)
 
 # running Localization, Normalization,Enhancement and Feature Extraction on all the training images
-boundary_train,centers_train=IrisLocalization(images_train)
-normalized_train=IrisNormalization(boundary_train,centers_train)
-enhanced_train=ImageEnhancement(normalized_train)
-feature_vector_train=FeatureExtraction(enhanced_train)
+images_train, boundary_train, centers_train,  = IrisLocalization(images_train)
+images_train, boundary_train, upper_eyelid_curves_train, lower_eyelid_curves_train = EyelidDetection(images_train, boundary_train)
+normalized_train = normalize_iris(images_train, boundary_train, upper_eyelid_curves_train, lower_eyelid_curves_train)
+enhanced_train = ImageEnhancement(normalized_train)
+feature_vector_train = FeatureExtraction(enhanced_train)
 print("Training data processed.")
-
 
 
 '''TESTING'''
@@ -44,103 +45,85 @@ num_data_test = len(images_test)
 print("Numero di dati di testing:", num_data_test)
 
 # running Localization, Normalization,Enhancement and Feature Extraction on all the testing images
-boundary_test,centers_test=IrisLocalization(images_test)
-normalized_test=IrisNormalization(boundary_test,centers_test)
-enhanced_test=ImageEnhancement(normalized_test)
-feature_vector_test=FeatureExtraction(enhanced_test)
+images_test, boundary_test, centers_test,  = IrisLocalization(images_test)
+images_test, boundary_test, upper_eyelid_curves_test, lower_eyelid_curves_test = EyelidDetection(images_test, boundary_test)
+normalized_test = normalize_iris(images_test, boundary_test, upper_eyelid_curves_test, lower_eyelid_curves_test)
+enhanced_test = ImageEnhancement(normalized_test)
+feature_vector_test = FeatureExtraction(enhanced_test)
 print("Testing data processed.")
 
+# Lista dei numeri di componenti per LDA
+components_list = [10, 30, 50, 70, 90, 107]
 
-crr_L1=[]
-crr_L2=[]
-crr_cosine=[]
-y_test=[]
-y_pred=[]
-match_cosine=[]
-match_cosine_ROC=[]
+distance_matrix_L1, distance_matrix_L2, distance_matrix_cosine, distance_matrix_L1_comp, distance_matrix_L2_comp, distance_matrix_cosine_comp, labels_train, labels_test = IrisMatching(feature_vector_test, feature_vector_train, components_list)
 
-# Performing Matching and CRR scores for 10,40,60,80,90,107 number of dimensions in the reduced feature vector
-components=[10, 40, 60, 80, 90, 107]
+# Calcola le metriche per L1
+cms_k_L1, cmc_L1, rr_L1 = PerformanceEvaluation(distance_matrix_L1, labels_train, labels_test)
 
-print("Begin Matching test data with the train data")
-for comp in components:
-    print(comp)
-    
-    # Running matching for all the dimensions specified in "components" 
-    comp_match_L1,comp_match_L2,comp_match_cosine,comp_match_cosine_ROC=IrisMatching(feature_vector_train,feature_vector_test,comp,0)
-    
-    # Calculating CRR for all the dimensions specified in "components" 
-    comp_crr_L1,comp_crr_L2,comp_crr_cosine=PerformanceEvaluation(comp_match_L1,comp_match_L2,comp_match_cosine)
-    
-    # combining the results of all the dimensional feature vector into one array
-    crr_L1.append(comp_crr_L1)
-    crr_L2.append(comp_crr_L2)
-    crr_cosine.append(comp_crr_cosine)
-    match_cosine.append(comp_match_cosine)
-    match_cosine_ROC.append(comp_match_cosine_ROC)
+# Calcola le metriche per L2
+cms_k_L2, cmc_L2, rr_L2 = PerformanceEvaluation(distance_matrix_L2, labels_train, labels_test)
+
+# Calcola le metriche per Cosine
+cms_k_cosine, cmc_cosine, rr_cosine = PerformanceEvaluation(distance_matrix_cosine, labels_train, labels_test)
 
 
-# Performing Matching and calculating CRR score for the original feature vector (without dimensionality reduction)
-orig_match_L1,orig_match_L2,orig_match_cosine,orig_match_cosine_ROC=IrisMatching(feature_vector_train,feature_vector_test,0,1)
-orig_crr_L1,orig_crr_L2,orig_crr_cosine=PerformanceEvaluation(orig_match_L1,orig_match_L2,orig_match_cosine)  
-print("Completed Matching")
+def plot_cmc(cmc, label):
+    plt.plot(range(1, len(cmc) + 1), cmc, label=label)
 
+# Stampa le metriche
+print("L1 Metrics:")
+print("Recognition Rate (RR):", rr_L1)
 
-# Table for CRR rates for the original and reduced feature set(components=107)
-print('\n\n\n')
-dict={'Similarity Measure':['L1','L2','Cosine Distance'],'CRR for Original Feature Set':[orig_crr_L1,orig_crr_L2,orig_crr_cosine],'CRR for Reduced Feature Set (107)':[crr_L1[5],crr_L2[5],crr_cosine[5]]}
-table=pd.DataFrame(dict)
-print("Recognition results using Different Similarity Measures : \n")
-print(table.iloc[0],"\n")
-print(table.iloc[1],"\n")
-print(table.iloc[2])
+print("\nL2 Metrics:")
+print("Recognition Rate (RR):", rr_L2)
 
+print("\nCosine Metrics:")
+print("Recognition Rate (RR):", rr_cosine)
 
-# Plotting the incresing CRR for cosine similarity with the incresing dimensionality
-plt.plot(components,crr_cosine)
-plt.axis([10,107,0,100])
-plt.ylabel('Correct Recognition Rate (Cosine)')
-plt.xlabel('Dimensionality of the feature vector')
-plt.title('Recognition Results')
+# Plotta le CMC curve
+plt.figure()
+plot_cmc(cmc_L1, label='L1')
+plot_cmc(cmc_L2, label='L2')
+plot_cmc(cmc_cosine, label='Cosine')
+
+# Aggiungi etichette e titolo
+plt.title('Cumulative Match Characteristic (CMC) Curve')
+plt.xlabel('Rank (k)')
+plt.ylabel('CMS(k)')
+plt.legend()
+plt.grid(True)
+
+# Mostra il grafico
 plt.show()
 
 
+for i, components in zip(range(6), components_list):
+    cms_k_L1, cmc_L1, rr_L1 = PerformanceEvaluation(distance_matrix_L1_comp[i], labels_train, labels_test)
+    cms_k_L2, cmc_L2, rr_L2 = PerformanceEvaluation(distance_matrix_L2_comp[i], labels_train, labels_test)
+    cms_k_cosine, cmc_cosine, rr_cosine = PerformanceEvaluation(distance_matrix_cosine_comp[i], labels_train, labels_test)
 
-# Calculating the false positive and the true positive rates for the data
-# We have taken match_cosine[5] because the 5th instance of the array is for the 107 reduced feature dimension
-fmr_all=[]
-fnmr_all=[]
+    # Stampa le metriche con LDA
+    print(f"\nWith LDA (components={components}):")
+    print("L1 Metrics:")
+    print("Recognition Rate (RR):", rr_L1)
 
-for q in range(0,3):
-    false_accept=0
-    false_reject=0
-    num_1=len([i for i in match_cosine_ROC[5][q] if i==1])
-    num_0=len([i for i in match_cosine_ROC[5][q] if i==0])
+    print("\nL2 Metrics:")
+    print("Recognition Rate (RR):", rr_L2)
 
-    for p in range(0,len(match_cosine[5])):
-        if match_cosine[5][p]==0 and match_cosine_ROC[5][q][p]==1:
-            false_accept+=1
-        if match_cosine[5][p]==1 and match_cosine_ROC[5][q][p]==0:
-            false_reject+=1
-    fmr=false_accept/num_1
-    fnmr=false_reject/num_0
-    thresh=[0.4,0.5,0.6]
-    fmr_all.append(fmr)
-    fnmr_all.append(fnmr)
+    print("\nCosine Metrics:")
+    print("Recognition Rate (RR):", rr_cosine)
 
+    # Plotta le CMC curve con LDA
+    plot_cmc(cmc_L1, label=f'L1 with LDA (components={components})')
+    plot_cmc(cmc_L2, label=f'L2 with LDA (components={components})')
+    plot_cmc(cmc_cosine, label=f'Cosine with LDA (components={components})')
 
-dict1={'Threshold':thresh,'FMR':fmr_all,'FNMR':fnmr_all}
-roc_table=pd.DataFrame(dict1)
-print("ROC Measures : \n")
-print(roc_table.iloc[0],"\n")
-print(roc_table.iloc[1],"\n")
-print(roc_table.iloc[2])
+    # Aggiungi etichette e titolo
+    plt.title('Cumulative Match Characteristic (CMC) Curve')
+    plt.xlabel('Rank (k)')
+    plt.ylabel('CMS(k)')
+    plt.legend()
+    plt.grid(True)
 
-
-# Plotting the ROC Curve
-plt.plot(fnmr_all,fmr_all)
-plt.title('ROC Curve')
-plt.ylabel('False Match Rate')
-plt.xlabel('False Non-Match Rate')
-plt.show()
-
+    # Mostra il grafico
+    plt.show()
