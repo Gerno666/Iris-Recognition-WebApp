@@ -37,7 +37,7 @@ def apply_lda(feature_vector_train, feature_vector_test, components):
     return red_train, red_test
 
 
-def IrisMatching(features_test, features_train, components_list):
+def IrisMatching(features_test, features_train, components_list, masks_test=None, masks_train=None):
 
     # Calcolo delle matrici delle distanze
     distance_matrix_L1 = manhattan_distances(features_test, features_train)
@@ -62,8 +62,7 @@ def IrisMatching(features_test, features_train, components_list):
         distance_matrix_cosine_comp.append(distance_matrix_cosine_c)
 
     # Creazione delle etichette
-    labels_train = [i for i in range(107) for _ in range(3)]  # 107 soggetti, 3 campioni per soggetto
-    labels_test = [i for i in range(107) for _ in range(4)]  # 107 soggetti, 4 campioni per soggetto
+    labels_train = [i for i in range(108) for _ in range(3)]  # 108 soggetti, 3 campioni per soggetto
+    labels_test = [i for i in range(108) for _ in range(4)]  # 108 soggetti, 4 campioni per soggetto
 
-    return(distance_matrix_L1, distance_matrix_L2, distance_matrix_cosine, distance_matrix_L1_comp, distance_matrix_L2_comp, distance_matrix_cosine_comp,labels_train, labels_test)
-
+    return (distance_matrix_L1, distance_matrix_L2, distance_matrix_cosine, distance_matrix_L1_comp, distance_matrix_L2_comp, distance_matrix_cosine_comp, labels_train, labels_test)

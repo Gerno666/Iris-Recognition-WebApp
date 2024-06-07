@@ -7,7 +7,7 @@ from PIL import Image
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy.exc import IntegrityError
-from ML_test import ML_Match
+from Iris_Match import match_images
 
 
 app = Flask(__name__)
@@ -101,7 +101,7 @@ def login():
         file_name_2 = f'data/iris_image_{email}.bmp'
         iris_picture_2.save(file_name_2, 'BMP')
 
-        bool = ML_Match(file_name_1, file_name_2)
+        bool = match_images(file_name_1, file_name_2)
 
         os.remove(file_name_1)
         os.remove(file_name_2)

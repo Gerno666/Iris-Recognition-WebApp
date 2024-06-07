@@ -1,6 +1,6 @@
 import numpy as np
 
-def PerformanceEvaluation(distance_matrix, labels_train, labels_test, ranks=324):
+def PerformanceEvaluation(distance_matrix, labels_train, labels_test, ranks=432):
     num_probes, num_gallery = distance_matrix.shape
     cms_k = [0] * ranks
     

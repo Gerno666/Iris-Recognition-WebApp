@@ -7,11 +7,9 @@ from Eyelid_Detection import EyelidDetection
 from Iris_Normalization import normalize_iris
 from Image_Enhancement import ImageEnhancement
 
-# Modulating function as defined in the paper
 def m(x, y, f):
     return np.cos(2 * np.pi * f * np.sqrt(x**2 + y**2))
 
-# Spatial filter as defined in the paper
 def gabor(x, y, dx, dy, f):
     gb = (1 / (2 * np.pi * dx * dy)) * np.exp(-0.5 * (x**2 / dx**2 + y**2 / dy**2)) * m(x, y, f)
     return gb

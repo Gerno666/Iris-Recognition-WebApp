@@ -29,7 +29,7 @@ num_data_train = len(images_train)
 print("Numero di dati di training:", num_data_train)
 
 # running Localization, Normalization,Enhancement and Feature Extraction on all the training images
-images_train, boundary_train, centers_train,  = IrisLocalization(images_train)
+images_train, boundary_train, _  = IrisLocalization(images_train)
 images_train, boundary_train, upper_eyelid_curves_train, lower_eyelid_curves_train = EyelidDetection(images_train, boundary_train)
 normalized_train = normalize_iris(images_train, boundary_train, upper_eyelid_curves_train, lower_eyelid_curves_train)
 enhanced_train = ImageEnhancement(normalized_train)
@@ -45,7 +45,7 @@ num_data_test = len(images_test)
 print("Numero di dati di testing:", num_data_test)
 
 # running Localization, Normalization,Enhancement and Feature Extraction on all the testing images
-images_test, boundary_test, centers_test,  = IrisLocalization(images_test)
+images_test, boundary_test, _ = IrisLocalization(images_test)
 images_test, boundary_test, upper_eyelid_curves_test, lower_eyelid_curves_test = EyelidDetection(images_test, boundary_test)
 normalized_test = normalize_iris(images_test, boundary_test, upper_eyelid_curves_test, lower_eyelid_curves_test)
 enhanced_test = ImageEnhancement(normalized_test)
@@ -68,7 +68,9 @@ cms_k_cosine, cmc_cosine, rr_cosine = PerformanceEvaluation(distance_matrix_cosi
 
 
 def plot_cmc(cmc, label):
-    plt.plot(range(1, len(cmc) + 1), cmc, label=label)
+    # Aggiungi il punto (0,0) all'inizio della lista
+    cmc = [0] + cmc
+    plt.plot(range(len(cmc)), cmc, label=label)
 
 # Stampa le metriche
 print("L1 Metrics:")

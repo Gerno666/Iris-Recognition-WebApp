@@ -128,7 +128,7 @@ def EyelidDetection(images, boundaries):
 
 
 '''# Caricamento dell'immagine
-image_path = 'data/CASIA Iris Image Database (version 1.0)/001/1/001_1_1.bmp'
+image_path = 'data/CASIA Iris Image Database (version 1.0)/002/1/002_1_1.bmp'
 image = cv2.imread(image_path)
 
 # Esecuzione di IrisLocalization
@@ -154,7 +154,7 @@ else:
 
 
 # Caricamento dell'immagine
-image_path = 'data/CASIA Iris Image Database (version 1.0)/001/1/001_1_1.bmp'
+image_path = 'data/CASIA Iris Image Database (version 1.0)/002/1/002_1_1.bmp'
 image = cv2.imread(image_path)
 
 # Immagine con palpebra localizzata
@@ -183,4 +183,3 @@ plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
 plt.axis('off')
 
 plt.show()'''
-
